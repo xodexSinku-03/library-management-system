@@ -1,0 +1,35 @@
+# Ignore Composer dependencies
+vendor/
+
+# Ignore node modules (if any)
+node_modules/
+
+# Ignore environment files
+.env
+
+# Ignore log files
+*.log
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore zip and archive files
+*.zip
+
+# Ignore IDE/editor files
+.vscode/
+*.swp
+
+# Ignore test files
+test.php
+
+# Ignore data backups
+*.bak
+
+# Ignore compiled files
+*.class
+*.pyc
+
+# Ignore other unwanted files
+*.tmp.env
