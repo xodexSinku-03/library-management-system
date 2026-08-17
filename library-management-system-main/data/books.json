@@ -1,0 +1,16 @@
+[
+    {
+        "title": "Ramayana",
+        "author": "Valmiki",
+        "description": "An ancient Indian epic...",
+        "link": "https://en.wikipedia.org/wiki/Ramayana",
+        "price": 10.00
+    },
+    {
+        "title": "Mahabharata",
+        "author": "Vyasa",
+        "description": "One of the two major...",
+        "link": "https://en.wikipedia.org/wiki/Mahabharata",
+        "price": 15.00
+    }
+]
