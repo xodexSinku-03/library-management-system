@@ -1,9 +1,0 @@
-vendor/
-.git/
-.gitignore
-.dockerignore
-Dockerfile
-docker-compose.yml
-Jenkinsfile
-.env
-*.md

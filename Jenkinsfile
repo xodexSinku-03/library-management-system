@@ -27,10 +27,10 @@ pipeline {
                 echo 'Running PHP syntax lint checks...'
                 sh '''
                     if command -v php >/dev/null 2>&1; then
-                        find . -maxdepth 3 -name "*.php" -not -path "*/vendor/*" -exec php -l {} \;
+                        find . -maxdepth 3 -name "*.php" -not -path "*/vendor/*" -exec php -l {} ';'
                     else
                         echo "PHP CLI not found on Jenkins agent. Running syntax check in PHP container..."
-                        docker run --rm -v "$(pwd)/library-management-system-main:/app" -w /app php:8.2-cli sh -c 'find . -maxdepth 3 -name "*.php" -not -path "*/vendor/*" -exec php -l {} \;'
+                        docker run --rm -v "$(pwd):/app" -w /app php:8.2-cli find . -maxdepth 3 -name "*.php" -not -path "*/vendor/*" -exec php -l {} ';'
                     fi
                 '''
             }
@@ -41,9 +41,9 @@ pipeline {
                 echo 'Validating composer.json configuration...'
                 sh '''
                     if command -v composer >/dev/null 2>&1; then
-                        cd library-management-system-main && composer validate --no-check-publish
+                        composer validate --no-check-publish
                     else
-                        docker run --rm -v "$(pwd)/library-management-system-main:/app" -w /app composer:latest composer validate --no-check-publish
+                        docker run --rm -v "$(pwd):/app" -w /app composer:latest composer validate --no-check-publish
                     fi
                 '''
             }
@@ -53,7 +53,7 @@ pipeline {
             steps {
                 echo "Building Docker image: ${IMAGE_NAME}..."
                 sh """
-                    cd library-management-system-main && docker build -t ${IMAGE_NAME} -t ${IMAGE_LATEST} .
+                    docker build -t ${IMAGE_NAME} -t ${IMAGE_LATEST} .
                 """
             }
         }
@@ -62,9 +62,9 @@ pipeline {
             steps {
                 echo 'Starting container stack for integration smoke test...'
                 sh """
-                    cd library-management-system-main && docker compose -p ${COMPOSE_PROJECT_NAME} up -d
+                    docker compose -p ${COMPOSE_PROJECT_NAME} up -d
                     sleep 10
-                    cd library-management-system-main && docker compose -p ${COMPOSE_PROJECT_NAME} ps
+                    docker compose -p ${COMPOSE_PROJECT_NAME} ps
                 """
                 echo 'Testing HTTP response from web container...'
                 sh """
@@ -77,7 +77,7 @@ pipeline {
             steps {
                 echo 'Tearing down integration test containers...'
                 sh """
-                    cd library-management-system-main && docker compose -p ${COMPOSE_PROJECT_NAME} down -v --remove-orphans || true
+                    docker compose -p ${COMPOSE_PROJECT_NAME} down -v --remove-orphans || true
                 """
             }
         }
@@ -87,7 +87,7 @@ pipeline {
         always {
             echo 'Pipeline execution finished.'
             sh """
-                cd library-management-system-main && docker compose -p ${COMPOSE_PROJECT_NAME} down -v --remove-orphans || true
+                docker compose -p ${COMPOSE_PROJECT_NAME} down -v --remove-orphans || true
             """
         }
         success {
@@ -98,3 +98,4 @@ pipeline {
         }
     }
 }
+
